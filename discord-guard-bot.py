@@ -293,5 +293,5 @@ async def on_message(message):
         await message.channel.send(f"{message.author.mention}, please do not mention more than {MENTION_THRESHOLD} users in one message.")
 
 
-client.run("MTA2NzYyNTc1ODUwNTMxMjMyNg.GVs24o.WhtSP5LYFwhjZyghm1kK4W1SB-em2CoPtGfc5E")
+client.run("your discord token here")
 
