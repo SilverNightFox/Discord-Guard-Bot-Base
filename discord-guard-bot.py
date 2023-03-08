@@ -1,3 +1,11 @@
+from discord.ext import commands
+
+import subprocess
+
+packages = ["transformers","discord","asyncio"]
+
+for package in packages:
+    subprocess.check_call(["pip", "install", package])
 
 import re
 import asyncio
@@ -10,12 +18,26 @@ import random
 import string
 import base64
 import transformers
-
+from discord import Intents
 
 intents = discord.Intents.default()
 intents.members = True
 
 client = commands.Bot(command_prefix='!', intents=intents)
+
+intents = discord.Intents.default()
+bot = commands.Bot(command_prefix='!', intents=intents)
+
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
+
+    origin = await bot.get_context(message)
+    if origin is not None and origin.author.id == bot.user.id:
+        return
+
+    await bot.process_commands(message)
 
 # Command whitelisting
 @commands.check
@@ -66,8 +88,6 @@ async def command_eval(ctx, *, code):
         traceback.print_exc()
         await ctx.send(f"Error executing code: {str(e)}")
 
-
-
 nlp = transformers.pipeline("text-classification", model="nlptown/bert-base-multilingual-uncased-sentiment")
 
 # Set up raid protection variables
@@ -101,7 +121,7 @@ async def on_member_join(member):
         return message.author == member and captcha_data.validate(message.content)
     try:
         response = await client.wait_for("message", check=check, timeout=60.0)
-        await response.add_roles(your role here)
+        await response.add_roles(your_role_here)
         await member.send("You have been verified.")
     except asyncio.TimeoutError:
         await member.kick(reason="Failed to complete CAPTCHA.")
@@ -132,7 +152,7 @@ async def on_message(message):
     elif sentiment == 'POSITIVE':
         pass
     else:
-        await message.channel.send("I'm sorry, I couldn't understand the sentiment of your message.")
+        await message.channel.send("")
     await bot.process_commands(message)
 
 # Command: set_slowmode
@@ -198,7 +218,7 @@ async def on_message(message):
         # do nothing
         pass
     else:
-        await message.channel.send("I'm sorry, I couldn't understand the sentiment of your message.")
+        await message.channel.send("")
 
     await bot.process_commands(message)
 
@@ -293,5 +313,5 @@ async def on_message(message):
         await message.channel.send(f"{message.author.mention}, please do not mention more than {MENTION_THRESHOLD} users in one message.")
 
 
-client.run("your discord token here")
+client.run("your discord bot token is here")
 
