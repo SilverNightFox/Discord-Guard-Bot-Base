@@ -101,7 +101,7 @@ async def on_member_join(member):
         return message.author == member and captcha_data.validate(message.content)
     try:
         response = await client.wait_for("message", check=check, timeout=60.0)
-        await response.add_roles(some_role)
+        await response.add_roles(your role here)
         await member.send("You have been verified.")
     except asyncio.TimeoutError:
         await member.kick(reason="Failed to complete CAPTCHA.")
